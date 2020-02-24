@@ -1,0 +1,10 @@
+{
+  "_id": "Auto generated ID",
+  "city": "City",
+  "zip": "ZIP",
+  "imagesPath": "Path of the stored images",
+  "location": {
+    "latitude": "Latitude",
+    "longitude": "Longitude"
+  }
+}

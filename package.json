@@ -1,0 +1,20 @@
+{
+  "name": "fix-my-crater-backend",
+  "version": "1.0.0",
+  "description": "Node Backend for fix-my-crater",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "Express"
+  ],
+  "author": "Vikas Kulkarni",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.13.3",
+    "express": "^4.13.3",
+    "mongodb": "^2.0.43"
+  }
+}
