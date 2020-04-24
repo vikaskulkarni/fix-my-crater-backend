@@ -6,5 +6,6 @@
   "location": {
     "latitude": "Latitude",
     "longitude": "Longitude"
-  }
+  },
+  "createDate": "Created Date"
 }

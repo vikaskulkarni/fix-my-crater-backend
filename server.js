@@ -1,111 +1,26 @@
-var express = require("express");
-var path = require("path");
-var bodyParser = require("body-parser");
-var mongodb = require("mongodb");
-var ObjectID = mongodb.ObjectID;
+require("dotenv").config();
+let express = require("express");
+let bodyParser = require("body-parser");
+let cors = require("cors");
 
-var CRATERS_COLLECTION = "craters";
+const initDb = require("./db").initDb;
 
-var app = express();
+let app = express();
+app.use(cors());
 app.use(bodyParser.json());
+const port = process.env.PORT || 3001;
 
-var db;
+const craters = require("./routes/craters-apis");
+app.use("/craters", craters);
 
-mongodb.MongoClient.connect(process.env.MONGODB_URI, function(err, database) {
-  if (err) {
-    console.log(err);
-    process.exit(1);
-  }
+const users = require("./routes/users-apis");
+app.use("/users", users);
 
-  db = database;
-  console.log("Database connection ready");
-
-  var server = app.listen(process.env.PORT || 3001, function() {
-    var port = server.address().port;
-    console.log("App now running on port", port);
-  });
-});
-
-function handleError(res, reason, message, code) {
-  console.log("ERROR: " + reason);
-  res.status(code || 500).json({ error: message });
-}
-
-app.get("/craters", function(req, res) {
-  db.collection(CRATERS_COLLECTION)
-    .find({})
-    .toArray(function(err, docs) {
-      if (err) {
-        handleError(res, err.message, "Failed to get craters.");
-      } else {
-        res.status(200).json(docs);
-      }
-    });
-});
-
-app.post("/craters", function(req, res) {
-  var newCrater = req.body;
-  newCrater.createDate = new Date();
-
-  if (!(req.body.zip || req.body.location)) {
-    handleError(
-      res,
-      "Invalid user input",
-      "Must provide a first or last name.",
-      400
-    );
-  }
-
-  db.collection(CRATERS_COLLECTION).insertOne(newCrater, function(err, doc) {
+initDb(function(err) {
+  app.listen(port, function(err) {
     if (err) {
-      handleError(res, err.message, "Failed to create new crater.");
-    } else {
-      res.status(201).json(doc.ops[0]);
+      throw err;
     }
+    console.log("API Up and running on port " + port);
   });
-});
-
-/*  "/craters/:id"
- *    GET: find crater by id
- *    PUT: update crater by id
- *    DELETE: deletes crater by id
- */
-
-app.get("/craters/:zip", function(req, res) {
-  db.collection(CRATERS_COLLECTION).find(
-    { zip: new ObjectID(req.params.zip) },
-    function(err, doc) {
-      if (err) {
-        handleError(res, err.message, "Failed to get crater");
-      } else {
-        res.status(200).json(doc);
-      }
-    }
-  );
-});
-
-app.get("/craters/:craterId", function(req, res) {
-  db.collection(CRATERS_COLLECTION).findOne(
-    { _id: new ObjectID(req.params.craterId) },
-    function(err, doc) {
-      if (err) {
-        handleError(res, err.message, "Failed to get crater");
-      } else {
-        res.status(200).json(doc);
-      }
-    }
-  );
-});
-
-app.delete("/craters/:craterId", function(req, res) {
-  db.collection(CRATERS_COLLECTION).deleteOne(
-    { _id: new ObjectID(req.params.craterId) },
-    function(err, result) {
-      if (err) {
-        handleError(res, err.message, "Failed to delete crater");
-      } else {
-        res.status(204).end();
-      }
-    }
-  );
 });

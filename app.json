@@ -1,8 +1,0 @@
-{
-  "name": "fix-my-crater-backend",
-  "description": "Node Backend for fix-my-crater",
-  "repository": "",
-  "logo": "",
-  "keywords": ["node", "express", "mongodb", "REST", "API"],
-  "addons": ["mongolab"]
-}

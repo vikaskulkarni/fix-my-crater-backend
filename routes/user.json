@@ -1,0 +1,8 @@
+{
+  "_id": "Auto generated ID",
+  "username": "Unique username",
+  "usermail": "Email ID",
+  "noOfCraters": "Number of craters submitted",
+  "noOfPhotos": "Total number of photos submitted",
+  "createDate": "Created Date"
+}
